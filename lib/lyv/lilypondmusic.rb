@@ -66,24 +66,24 @@ module Lyv
     def load_from(stream, src_name='')
       store = ''
       beginning = true
-      while l = stream.gets do
-          if l =~ /\\score\s*\{/ then        
-            if beginning then
-              beginning = false
-              @preamble = store
-              store = l
-              next
-            else
-              create_score store, src_name
-              store = l
-            end
+      while (l = stream.gets)
+        if l =~ /\\score\s*\{/ then        
+          if beginning then
+            beginning = false
+            @preamble = store
+            store = l
+            next
           else
-            store += l
+            create_score store, src_name
+            store = l
           end
+        else
+          store += l
         end
-        
-        # last score:
-        create_score store, src_name
       end
+        
+      # last score:
+      create_score store, src_name
     end
   end
+end
