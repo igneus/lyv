@@ -1,4 +1,4 @@
 
-%w{ musicreader }.each do |lib|
+%w{ lilypondmusic lilypondscore }.each do |lib|
   require_relative File.join 'lyv', lib
 end
