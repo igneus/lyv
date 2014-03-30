@@ -16,6 +16,6 @@ RSpec.configure do |config|
   config.order = 'random'
 end
 
-require_relative '../lib/lyv'
+require_relative File.join '..', 'lib', 'lyv'
 
 EXAMPLES_DIR = File.join( File.dirname(__FILE__), 'examples_ly' )
