@@ -8,7 +8,36 @@ module Lyv
   # tasks executed by subcommands
   class LyvCLI < Thor
 
-    class_option :verbose, :type => :boolean, :desc => "Run verbose"
+    class_option :verbose, :type => :boolean, :desc => "Run verbose", :aliases => :v
+
+    #
+    # list
+    #
+
+    desc('list [FILE1 [FILE2 [...]]]',
+         'lists scores contained in the file(s)')
+
+    option(:order, :type => :string, :banner => 'file|alphabetic', :default => 'alphabetic')
+
+    option(:id, :type => :boolean, :aliases => :i,
+           :desc => 'print id')
+    option(:field,
+           :desc => 'print contents of the given header field')
+    option(:filename, :type => :boolean, :aliases => :f, :default => true,
+           :desc => 'print file name')
+
+    option(:lyrics, :type => :boolean, :aliases => :l, :default => true,
+           :desc => 'print lyrics')
+    option(:'lyrics-shorten', :type => :numeric, :default => -1,
+           :desc => 'print whole words not longer than N characters')
+    option(:music,
+           :desc => 'print music source')
+    option(:'music-shorten', :type => :numeric, :default => -1,
+           :desc => 'print incipit not longer than N notes')
+
+    def list(*paths)
+
+    end
 
     #
     # split
