@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+
+require 'lyv'
+require 'thor'
+
+module Lyv
+
+  # tasks executed by subcommands
+  class LyvCLI < Thor
+
+    class_option :verbose, :type => :boolean, :desc => "Run verbose"
+
+    #
+    # split
+    #
+
+    desc('split [FILE1 [FILE2 [...]]]',
+         'splits lilypond file(s) to a set of files containing separate scores')
+
+    option(:'ids', :type => :boolean, :aliases => :i,
+           :desc => "Instead of numbering the produced files, use property 'id' of each score")
+    option(:'output-dir', :aliases => :d, 
+           :desc => 'directory to place the created chunks')
+    option(:'remove-headers', :aliases => :H, 
+           :desc => "Remove header from each score")
+    option(:'prepend-text', :banner => 'TEXT',
+           :desc => "Text to be printed at the beginning of each file with a score")
+    option(:'insert-text', :banner => 'TEXT',
+           :desc => "Text to be inserted before the score's closing brace")
+
+    # very specific for the In adiutorium project
+    option(:'mode-info', :aliases => :m,
+           :desc => "Puts contents of properties quid, modus and differentia in front of the piece")
+
+    def split(*paths)
+      splitter = MusicSplitter.new(options)
+      paths.each {|p| splitter.split p }
+    end
+  end
+end
+
+if $0 == __FILE__ then
+  Lyv::LyvCLI.start(ARGV)
+end
+
+# Local Variables:
+# mode: ruby
+# End: 
