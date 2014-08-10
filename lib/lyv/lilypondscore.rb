@@ -11,12 +11,12 @@ module Lyv
       init_header
       init_music
     end
-    
+
     # complete source of the score
-    attr_reader :text 
+    attr_reader :text
 
     # score lyrics as included in the source file, only with comments stripped
-    attr_reader :lyrics_raw 
+    attr_reader :lyrics_raw
 
     # score lyrics stripped of lilypond syllabification
     attr_reader :lyrics_readable
@@ -25,20 +25,22 @@ module Lyv
     attr_reader :music
 
     # Hash containing header fields
-    attr_reader :header 
+    attr_reader :header
 
     # position of the score in the file
-    attr_reader :number 
+    attr_reader :number
 
     # name/path of the source file - only if loaded from a file
     attr_reader :src_file
 
     def to_s
-      "#{@src_file}#" + (@header['id'] ? @header['id'] : @number).to_s
+      "#{@src_file}#" + \
+        ((@header['id'] != nil && @header['id'].size > 0) ?
+         @header['id'] : @number).to_s
     end
-    
+
     private
-    
+
     def init_text
       # remove possible characters at the end which do not belong to the score -
       # because the "parser" of class LilyPondMusic isn't any clever
@@ -46,7 +48,7 @@ module Lyv
       end_i = LilyPondScore.index_matching_brace(@text, i)
       @text = @text[0..end_i]
     end
-    
+
     def init_lyrics
       i1 = @text.index '\addlyrics'
       unless i1
@@ -58,7 +60,7 @@ module Lyv
       i2 = @text.index '}', i1
       ltext = @text[i1+1..i2-1]
       @lyrics_raw = ltext.split("\n").collect {|l| l.sub(/%.*$/, '') }.join("\n").strip
-      
+
       @lyrics_readable = @lyrics_raw.dup
       # remove various garbage:
       @lyrics_readable.gsub!(' -- ', '') # syllable-separators
@@ -67,7 +69,7 @@ module Lyv
       @lyrics_readable.gsub!(/\s+/, ' ') # whitespace
       @lyrics_readable.strip! # leading and trailing whitespace
     end
-    
+
     def init_header
       @header = {}
       i1 = @text.index '\header'
@@ -102,9 +104,9 @@ module Lyv
       i3 = LilyPondScore.index_matching_brace @text, i2
       @music = @text[i1..i3]
     end
-    
-    public 
-    
+
+    public
+
     # finds index of a brace matching to a brace at index i1
     def LilyPondScore.index_matching_brace(str, i1)
       braces_stack = [i1]
@@ -112,11 +114,11 @@ module Lyv
       loop do
         io = str.index '{', i
         ic = str.index '}', i
-        
+
         unless ic
           raise "No more closing brace found in the given string, #{braces_stack.size} braces still open."
         end
-        
+
         if io &&  io < ic then
           braces_stack.push io
           i = io+1
@@ -124,7 +126,7 @@ module Lyv
           braces_stack.pop
           i = ic+1
         end
-        
+
         if braces_stack.empty? then
           return ic
         end
