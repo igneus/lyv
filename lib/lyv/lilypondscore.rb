@@ -98,8 +98,9 @@ module Lyv
       unless i1
         return
       end
-      i2 = LilyPondScore.index_matching_brace @text, i1
-      @music = @text[i1..i2]
+      i2 = @text.index('{', i1)
+      i3 = LilyPondScore.index_matching_brace @text, i2
+      @music = @text[i1..i3]
     end
     
     public 
