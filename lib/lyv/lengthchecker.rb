@@ -42,7 +42,7 @@ module Lyv
     end
 
     def lyrics_length(score)
-
+      score.lyrics_raw.split(/\s+/).select {|x| x != '--' }.size
     end
   end
 end

@@ -12,7 +12,7 @@ module Lyv
       @simple_ly = "\\score { \\relative c' { a4 } }"
       @simple_score = LilyPondScore.new @simple_ly
 
-      @notes_ly = "\\score { \\relative c' { a4 b c, d8. e'' f4 g4 a bes cis2 } }"
+      @notes_ly = "\\score { \\relative c' { a4 b c, d8. e'' f4 g4 a bes cis2 } \\addlyrics { a -- hoj a -- no ne la -- la -- la moo_m -- tsa } }"
       @notes_score = LilyPondScore.new @notes_ly
 
       @melisma_ly = "\\score { \\relative c' { a4~ a b,( d) } }"
@@ -34,7 +34,9 @@ module Lyv
     end
 
     describe '#lyrics_length' do
-
+      it 'works well' do
+        @c.lyrics_length(@notes_score).should eq 10
+      end
     end
 
     describe '#check' do
