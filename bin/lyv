@@ -74,8 +74,20 @@ module Lyv
          'lists scores where lenght of the music doesn\'t match lyrics\' lenght')
 
     def lengthcheck(*paths)
-      checker = LengthChecker.new(options)
-      paths.each {|p| checker.check_file p }
+      checker = LengthChecker.new
+      paths.each do |p|
+        heading_printed = false
+        LilyPondMusic.new(p).scores.each do |score|
+          r = checker.check score
+          if r.is_a? Array then
+            unless heading_printed
+              puts p
+              heading_printed = true
+            end
+            puts(r.join(':').ljust(7) + ' ' + score.to_s)
+          end
+        end
+      end
     end
   end
 end
