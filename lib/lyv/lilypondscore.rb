@@ -9,6 +9,7 @@ module Lyv
       init_text
       init_lyrics
       init_header
+      init_music
     end
     
     # complete source of the score
@@ -19,6 +20,9 @@ module Lyv
 
     # score lyrics stripped of lilypond syllabification
     attr_reader :lyrics_readable
+
+    # music
+    attr_reader :music
 
     # Hash containing header fields
     attr_reader :header 
@@ -86,6 +90,16 @@ module Lyv
         value.gsub!(/['"]/, '') # strip quotes
         @header[name] = value
       end
+    end
+
+    def init_music
+      @music = ''
+      i1 = @text.index(/\\(relative|absolute)/)
+      unless i1
+        return
+      end
+      i2 = LilyPondScore.index_matching_brace @text, i1
+      @music = @text[i1..i2]
     end
     
     public 

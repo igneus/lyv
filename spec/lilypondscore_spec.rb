@@ -6,9 +6,8 @@ module Lyv
   
   describe LilyPondScore do
 
-    describe ".new" do
-      before :each do
-        @score_with_comments_source = '\score {
+    before :each do
+      @score_with_comments_source = '\score {
   \relative c\'\' {
     \choralniRezim
     c a c c a g f \barMin
@@ -26,25 +25,47 @@ module Lyv
     piece = \markup {\sestavTitulek}
   }
 }'
-        @score_with_comments = LilyPondScore.new @score_with_comments_source
-      end
+      @score_with_comments = LilyPondScore.new @score_with_comments_source
+    end
 
-      it 'does not strip comments from source text' do
+    describe "#text" do
+      it 'preserves comments' do
         @score_with_comments.text.should include '% Hle'
       end
+    end
       
-      it 'strips comments from lyrics_raw' do
+    describe '#lyrics_raw' do
+      it 'has comments stripped' do
         @score_with_comments.lyrics_raw.should_not include '%'
         @score_with_comments.lyrics_raw.should eq 'Ej -- hle, Hos -- po -- din při -- jde'
       end
+    end
 
-      it 'strips comments from lyrics_readable' do
+    describe '#lyrics_readable' do
+      it 'has comments stripped' do
         @score_with_comments.lyrics_readable.should_not include '%'
         @score_with_comments.lyrics_readable.should eq 'Ejhle, Hospodin přijde'
       end
+    end
 
-      it 'strips comments following header fields' do
+    describe '#header' do
+      it 'does not contain comments' do
         @score_with_comments.header['psalmus'].should eq 'Žalm 142'
+      end
+    end
+
+    describe '#music' do
+      it 'starts with the opening token of the music' do
+        @score_with_comments.music.should start_with "\\relative c''"
+      end
+
+      it 'ends with the closing brace' do
+        @score_with_comments.music.should end_with '}'
+      end
+
+      it 'contains music' do
+        @score_with_comments.music.should include '\choralniRezim'
+        @score_with_comments.music.should include 'c a c c a g f \barMin'
       end
     end
   end

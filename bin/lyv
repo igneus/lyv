@@ -65,6 +65,18 @@ module Lyv
       splitter = MusicSplitter.new(options)
       paths.each {|p| splitter.split p }
     end
+
+    #
+    # lenghtcheck
+    #
+
+    desc('lengthcheck [FILE1 [FILE2 [...]]]',
+         'lists scores where lenght of the music doesn\'t match lyrics\' lenght')
+
+    def lengthcheck(*paths)
+      checker = LengthChecker.new(options)
+      paths.each {|p| checker.check_file p }
+    end
   end
 end
 
