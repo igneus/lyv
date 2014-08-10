@@ -14,21 +14,22 @@ module Lyv
 
       @notes_ly = "\\score { \\relative c' { a4 b c, d8. e'' f4 g4 a bes cis2 } }"
       @notes_score = LilyPondScore.new @notes_ly
+
+      @melisma_ly = "\\score { \\relative c' { a4~ a b,( d) } }"
+      @melisma_score = LilyPondScore.new @melisma_ly
     end
 
     describe '#music_length' do
       it 'copes with a simple score' do
-        p @simple_score
         @c.music_length(@simple_score).should eq 1
       end
 
       it 'copes with a multiple-notes score' do
-        p @notes_score
         @c.music_length(@notes_score).should eq 10
       end
 
-      xit 'counts melisma as one note' do
-        #
+      it 'counts melisma as one note' do
+        @c.music_length(@melisma_score).should eq 2
       end
     end
 

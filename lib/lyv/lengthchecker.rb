@@ -22,7 +22,23 @@ module Lyv
     def music_length(score)
       m = score.music
       m_content = m[m.index('{')+1 .. m.rindex('}')-1]
-      return m_content.scan(/[cdefgab](is|es)?[',]*[12486]{0,2}/).size
+
+      l = 0
+      in_melisma = false
+      m_content.scan(/[cdefgab](is|es)?[',]*[12486]{0,2}([\(\)~])?/) do |accidental, mel|
+        if mel == '~' then
+          next
+        elsif mel == '(' then
+          in_melisma = true
+          next
+        elsif mel == ')' then
+          in_melisma = false
+        end
+
+        l += 1
+      end
+
+      return l
     end
 
     def lyrics_length(score)
