@@ -19,8 +19,10 @@ module Lyv
         load_from src
       elsif src.is_a? String and src.include? '\score' then
         load_from StringIO.new src
-      elsif src.is_a? String and File.exist? src
+      elsif src.is_a? String and File.exist? src then
         load_from File.open(src, "r"), src
+      elsif src.is_a? String then
+        load_from StringIO.new src
       else
         raise ArgumentError.new("Unable to load LilyPond music from #{src.inspect}.")
       end
@@ -83,7 +85,11 @@ module Lyv
       end
         
       # last score:
-      create_score store, src_name
+      if beginning then
+        @preamble = store
+      else
+        create_score store, src_name
+      end
     end
   end
 end

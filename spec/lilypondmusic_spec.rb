@@ -64,6 +64,11 @@ module Lyv
           s.number.should eq i+1
         end
       end
+
+      it 'loads a document with no scores without error' do
+        m = LilyPondMusic.new ''
+        m.scores.should eq []
+      end
     end
   end
 
