@@ -96,10 +96,11 @@ EOS
         comment_score = LilyPondScore.new "\\score { \\relative c' { d } \\addlyrics { % mu \n } }"
         @c.lyrics_length(comment_score).should eq 0
       end
-    end
 
-    describe '#check' do
-
+      it 'skip counts as one syllable' do
+        skip_score = LilyPondScore.new "\\score { \\relative c' { d } \\addlyrics { \\skip 1 } }"
+        @c.lyrics_length(skip_score).should eq 1
+      end
     end
   end
 end
