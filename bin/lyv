@@ -77,6 +77,8 @@ module Lyv
            :desc => "Print full source of each score with detected defect.")
     option(:no_empty, :type => :boolean, :aliases => :e, :default => false,
            :desc => "Print scores where music or lyrics is empty?")
+    option(:lilypond, :type => :boolean, :aliases => :l,
+           :desc => "Print reports as lilypond markup")
 
     def lengthcheck(*paths)
       checker = LengthChecker.new
@@ -92,12 +94,20 @@ module Lyv
             end
 
             unless heading_printed
-              puts p
+              heading = p
+              if options[:lilypond] then
+                heading = '\markup\bold{ '+heading+' }'
+              end
+              puts heading
               heading_printed = true
               puts if options[:score]
             end
 
-            puts(r.join(':').ljust(7) + ' ' + score.to_s)
+            report = r.join(':').ljust(7) + ' ' + score.to_s
+            if options[:lilypond] then
+              report = '\markup{ "'+report+'" }'
+            end
+            puts(report)
 
             if options[:source] then
               puts
