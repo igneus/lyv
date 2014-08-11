@@ -76,6 +76,11 @@ EOS
         markup_score = LilyPondScore.new "\\score { \\relative c' { d^\\markup\\rubrVelikAleluja } }"
         @c.music_length(markup_score).should eq 1
       end
+
+      it 'ignores comments' do
+        comment_score = LilyPondScore.new "\\score { \\relative c' { % d e \n } }"
+        @c.music_length(comment_score).should eq 0
+      end
     end
 
     describe '#lyrics_length' do
@@ -85,6 +90,11 @@ EOS
 
       it 'copes with a real score' do
         @c.lyrics_length(@real_score).should eq 21
+      end
+
+      it 'ignores comments' do
+        comment_score = LilyPondScore.new "\\score { \\relative c' { d } \\addlyrics { % mu \n } }"
+        @c.lyrics_length(comment_score).should eq 0
       end
     end
 

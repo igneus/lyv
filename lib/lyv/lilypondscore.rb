@@ -1,7 +1,12 @@
+# -*- coding: utf-8 -*-
+
 module Lyv
   # Parses a simple score;
   # provides access to it's source, lyrics and header
   class LilyPondScore
+
+    include LilyPondTools
+
     def initialize(text, srcfile=nil, number=1)
       @text = text
       @number = number
@@ -59,7 +64,7 @@ module Lyv
       i1 = @text.index '{', i1
       i2 = @text.index '}', i1
       ltext = @text[i1+1..i2-1]
-      @lyrics_raw = ltext.split("\n").collect {|l| l.sub(/%.*$/, '') }.join("\n").strip
+      @lyrics_raw = delete_comments ltext
 
       @lyrics_readable = @lyrics_raw.dup
       # remove various garbage:

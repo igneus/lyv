@@ -7,6 +7,8 @@ module Lyv
 
   class LengthChecker
 
+    include LilyPondTools
+
     # returns false if length of lyrics corresponds to the length of music,
     # otherwise returns Array of two Integers [music_length, lyrics_length]
     def check(score)
@@ -30,11 +32,15 @@ module Lyv
         return 0
       end
 
+      # delete everything that we are not interesting in 
+      # and could be interpreted as notes:
+      # - comments (may include notes)
+      m_content = delete_comments(m_content)
+      # - key signature
+      m_content = m_content.gsub(/\\key [cdefgab](is|es)? \\\w+/, '')
+
       l = 0
       in_melisma = false
-
-      # remove key signature
-      m_content = m_content.gsub(/\\key [cdefgab](is|es)? \\\w+/, '')
 
       m_content.split(/\s+/).each do |token|
         /^[cdefgab](is|es)?[',]*[12486]{0,2}\.?([\(\)~])?([_\-\^].*)?$/.match(token) do |match|
@@ -59,7 +65,8 @@ module Lyv
     end
 
     def lyrics_length(score)
-      score.lyrics_raw.strip.split(/\s+/).select {|x| x != '--' }.size
+      delete_comments(score.lyrics_raw).strip \
+        .split(/\s+/).select {|x| x != '--' }.size
     end
   end
 end
