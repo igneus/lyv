@@ -62,7 +62,7 @@ module Lyv
            :desc => "Puts contents of properties quid, modus and differentia in front of the piece")
 
     def split(*paths)
-      splitter = MusicSplitter.new(options)
+      splitter = MusicSplitter.new options
       paths.each {|p| splitter.split p }
     end
 
@@ -72,6 +72,9 @@ module Lyv
 
     desc('lengthcheck [FILE1 [FILE2 [...]]]',
          'lists scores where lenght of the music doesn\'t match lyrics\' lenght')
+
+    option(:score, :type => :boolean, :aliases => :s,
+           :desc => "Print full source of each score with detected defect.")
 
     def lengthcheck(*paths)
       checker = LengthChecker.new
@@ -83,8 +86,16 @@ module Lyv
             unless heading_printed
               puts p
               heading_printed = true
+              puts if options[:score]
             end
+
             puts(r.join(':').ljust(7) + ' ' + score.to_s)
+
+            if options[:score] then
+              puts
+              puts score.text
+              puts
+            end
           end
         end
       end
