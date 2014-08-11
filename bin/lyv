@@ -75,6 +75,8 @@ module Lyv
 
     option(:score, :type => :boolean, :aliases => :s,
            :desc => "Print full source of each score with detected defect.")
+    option(:no_empty, :type => :boolean, :aliases => :e, :default => false,
+           :desc => "Print scores where music or lyrics is empty?")
 
     def lengthcheck(*paths)
       checker = LengthChecker.new
@@ -83,6 +85,12 @@ module Lyv
         LilyPondMusic.new(p).scores.each do |score|
           r = checker.check score
           if r.is_a? Array then
+            if options[:no_empty] then
+              if r.include? 0 then
+                next
+              end
+            end
+
             unless heading_printed
               puts p
               heading_printed = true
