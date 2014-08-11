@@ -9,10 +9,9 @@ Gem::Specification.new do |s|
 
   s.authors     = ["Jakub Pavlík"]
   s.email       = 'jkb.pavlik@gmail.com'
-  s.files       = Dir['bin/*.rb'] + Dir['lib/*.rb'] + Dir['lib/lyv/*.rb'] + Dir['spec/*.rb']
+  s.files       = ['bin/lyv'] + Dir['lib/*.rb'] + Dir['lib/lyv/*.rb'] + Dir['spec/*.rb']
   s.executables = ['lyv']
-  s.homepage    =
-    'http://github.com/igneus/lyv'
+  s.homepage    = 'http://github.com/igneus/lyv'
   s.licenses    = ['LGPL-3.0', 'MIT']
 
   s.add_runtime_dependency 'thor'
