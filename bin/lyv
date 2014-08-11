@@ -73,7 +73,7 @@ module Lyv
     desc('lengthcheck [FILE1 [FILE2 [...]]]',
          'lists scores where lenght of the music doesn\'t match lyrics\' lenght')
 
-    option(:score, :type => :boolean, :aliases => :s,
+    option(:source, :type => :boolean, :aliases => :s,
            :desc => "Print full source of each score with detected defect.")
     option(:no_empty, :type => :boolean, :aliases => :e, :default => false,
            :desc => "Print scores where music or lyrics is empty?")
@@ -99,7 +99,7 @@ module Lyv
 
             puts(r.join(':').ljust(7) + ' ' + score.to_s)
 
-            if options[:score] then
+            if options[:source] then
               puts
               puts score.text
               puts
