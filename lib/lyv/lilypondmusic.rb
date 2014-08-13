@@ -8,13 +8,13 @@ module Lyv
   # Parses a lilypond file;
   # provides access to it's scores
   class LilyPondMusic
-    
+
     def initialize(src)
       @scores = []
       @id_index = {}
       @preamble = ''
       @score_counter = 0
-      
+
       if src.is_a? IO then
         load_from src
       elsif src.is_a? String and src.include? '\score' then
@@ -27,7 +27,7 @@ module Lyv
         raise ArgumentError.new("Unable to load LilyPond music from #{src.inspect}.")
       end
     end
-    
+
     attr_reader :scores
     attr_reader :preamble
 
@@ -46,9 +46,9 @@ module Lyv
     def ids_included
       @scores.collect {|s| s.header['id'] }
     end
-    
+
     private
-    
+
     def create_score(store, src_name)
       @score_counter += 1
       begin
@@ -69,7 +69,7 @@ module Lyv
       store = ''
       beginning = true
       while (l = stream.gets)
-        if l =~ /\\score\s*\{/ then        
+        if l =~ /\\score\s*\{/ then
           if beginning then
             beginning = false
             @preamble = store
@@ -83,7 +83,7 @@ module Lyv
           store += l
         end
       end
-        
+
       # last score:
       if beginning then
         @preamble = store
