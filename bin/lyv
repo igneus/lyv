@@ -118,6 +118,22 @@ module Lyv
         end
       end
     end
+
+    #
+    # tex
+    #
+
+    desc('tex [FILE1 [FILE2 [...]]]',
+         'expands lyvtex macros and builds resources specified by these macros')
+
+    def tex(*paths)
+      require 'lyv/lyvtex'
+
+      paths.each do |p|
+        LyvTeX.preprocess(p, options)
+      end
+    end
+
   end
 end
 

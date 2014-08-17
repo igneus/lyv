@@ -1,6 +1,16 @@
+GIT
+  remote: git://github.com/igneus/pslm.git
+  revision: dd021afb1ca399b6a460410f0f7719d6b4203496
+  specs:
+    pslm (0.0.0)
+      colorize
+      deep_merge
+
 GEM
   remote: https://rubygems.org/
   specs:
+    colorize (0.7.3)
+    deep_merge (1.0.1)
     diff-lcs (1.2.5)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -16,5 +26,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  pslm!
   rspec
   thor
