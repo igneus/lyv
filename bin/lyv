@@ -17,7 +17,7 @@ module Lyv
     desc('list [FILE1 [FILE2 [...]]]',
          'lists scores contained in the file(s)')
 
-    option(:order, :type => :string, :banner => 'file|alphabetic', :default => 'alphabetic')
+    option(:order, :type => :string, :banner => 'file|lyrics|header:NAME', :default => 'lyrics')
 
     option(:id, :type => :boolean, :aliases => :i,
            :desc => 'print id')
