@@ -17,7 +17,7 @@ module Lyv
     desc('list [FILE1 [FILE2 [...]]]',
          'lists scores contained in the file(s)')
 
-    option(:order, :type => :string, :banner => 'file|lyrics|header:NAME', :default => 'lyrics')
+    option(:order, :type => :string, :banner => 'file|lyrics|header:NAME', :default => 'file')
 
     option(:id, :type => :boolean, :aliases => :i,
            :desc => 'print id')
@@ -34,9 +34,63 @@ module Lyv
            :desc => 'print music source')
     option(:'music-shorten', :type => :numeric, :default => -1,
            :desc => 'print incipit not longer than N notes')
+    option(:recursive, :type => :boolean, :aliases => :r,
+           :desc => 'recursively process all .ly files in directories')
 
     def list(*paths)
+      pieces = []
+      paths.each do |f|
+        begin
+          m = LilyPondMusic.new f
+        rescue => ex
+          STDERR.puts "#{f}: #{ex.class}: #{ex.message}"
+          next
+        end
 
+        m.scores.each_with_index do |s,i|
+          if s.lyrics_readable != ''
+            # TODO: do we always want to skip scores without lyrics?
+            pieces << s
+          end
+        end
+      end
+
+      case options[:order]
+      when 'file'
+        # do nothing
+      when 'lyrics'
+        pieces.sort! {|x,y| x.lyrics_readable <=> y.lyrics_readable }
+      when /^header:/
+        raise RuntimeError('not yet implemented')
+      else
+        STDERR.puts "Unknown ordering mode '#{options[:order]}'"
+      end
+
+      lyricsmaxsize = options[:'lyrics-shorten']
+      pieces.each do |p|
+        lyrics = p.lyrics_readable
+        if lyricsmaxsize < 0 then
+          print lyrics
+        elsif lyrics.size < lyricsmaxsize then
+          print lyrics.ljust(lyricsmaxsize)
+        else
+          trimmed_end = lyrics.rindex(/\s/, lyricsmaxsize)
+          if trimmed_end == nil then
+            # no whitespace found in the string; cut it hard
+            trimmed_end = lyricsmaxsize
+          end
+          print lyrics[0..trimmed_end]
+        end
+        print ' / '
+        print p.src_file
+        if options[:id] &&
+            p.header['id'].is_a?(String) &&
+            p.header['id'].size > 0 then
+          print '#'+p.header['id']
+        end
+
+        puts
+      end
     end
 
     #
@@ -48,9 +102,9 @@ module Lyv
 
     option(:'ids', :type => :boolean, :aliases => :i,
            :desc => "Instead of numbering the produced files, use property 'id' of each score")
-    option(:'output-dir', :aliases => :d, 
+    option(:'output-dir', :aliases => :d,
            :desc => 'directory to place the created chunks')
-    option(:'remove-headers', :aliases => :H, 
+    option(:'remove-headers', :aliases => :H,
            :desc => "Remove header from each score")
     option(:'prepend-text', :banner => 'TEXT',
            :desc => "Text to be printed at the beginning of each file with a score")
@@ -158,4 +212,4 @@ end
 
 # Local Variables:
 # mode: ruby
-# End: 
+# End:
