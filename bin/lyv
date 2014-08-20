@@ -134,6 +134,21 @@ module Lyv
       end
     end
 
+    #
+    # index
+    #
+
+    desc('index [FILE1 [FILE2 [...]]]',
+         'creates SQLite index of all contained scores for advanced searches')
+
+    def index(*paths)
+      require 'lyv/index'
+
+      Index.new(File.join('.lyv', 'index.sqlite3')) do |index|
+        paths.each {|p| index.add LilyPondMusic.new p }
+      end
+    end
+
   end
 end
 
