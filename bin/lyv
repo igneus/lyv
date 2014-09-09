@@ -198,7 +198,15 @@ module Lyv
     def index(*paths)
       require 'lyv/index'
 
-      Index.new(File.join('.lyv', 'index.sqlite3')) do |index|
+      dir = '.lyv'
+      FileUtils.mkpath dir
+
+      file = File.join(dir, 'index.sqlite3')
+      if File.exist? file then
+        File.delete file
+      end
+
+      Index.new(file) do |index|
         paths.each {|p| index.add LilyPondMusic.new p }
       end
     end
