@@ -202,12 +202,9 @@ module Lyv
       FileUtils.mkpath dir
 
       file = File.join(dir, 'index.sqlite3')
-      if File.exist? file then
-        File.delete file
-      end
 
       Index.new(file) do |index|
-        paths.each {|p| index.add LilyPondMusic.new p }
+        paths.each {|p| index.add_file p }
       end
     end
 
