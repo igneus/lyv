@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'thor'
 
-  s.add_optional_dependency 'pslm'
-  s.add_optional_dependency 'sqlite3'
+  #s.add_optional_dependency 'pslm'
+  #s.add_optional_dependency 'sqlite3'
 
   s.add_development_dependency 'rspec', '~> 2.14'
 end
