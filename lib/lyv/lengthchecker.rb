@@ -43,7 +43,7 @@ module Lyv
       in_melisma = false
 
       m_content.split(/\s+/).each do |token|
-        /^[cdefgab](is|es)?[',]*[12486]{0,2}\.?!?([\(\)~])?([_\-\^].*)?$/.match(token) do |match|
+        /^[cdefgab](is|es)?[',]*[12486]{0,2}\.?[!\?]?([\(\)~])?([_\-\^].*)?$/.match(token) do |match|
           accidental, mel = match[1], match[2]
 
           if mel == '~' then

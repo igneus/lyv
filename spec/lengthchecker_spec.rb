@@ -81,6 +81,11 @@ EOS
         comment_score = LilyPondScore.new "\\score { \\relative c' { % d e \n } }"
         @c.music_length(comment_score).should eq 0
       end
+
+      it 'handles ? and ! correctly' do
+        score = LilyPondScore.new "\\score { \\relative c' { bes? bes! } }"
+        @c.music_length(score).should eq 2
+      end
     end
 
     describe '#lyrics_length' do
