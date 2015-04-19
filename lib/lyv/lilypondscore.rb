@@ -62,7 +62,7 @@ module Lyv
         return
       end
       i1 = @text.index '{', i1
-      i2 = @text.index '}', i1
+      i2 = self.class.index_matching_brace @text, i1
       ltext = @text[i1+1..i2-1]
       @lyrics_raw = delete_comments ltext
 

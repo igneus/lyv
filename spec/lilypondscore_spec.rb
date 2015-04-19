@@ -39,6 +39,11 @@ module Lyv
         @score_with_comments.lyrics_raw.should_not include '%'
         @score_with_comments.lyrics_raw.should eq 'Ej -- hle, Hos -- po -- din při -- jde'
       end
+
+      it 'handles nested braced expressions correctly' do
+        score = LilyPondScore.new "\\score { \\relative c' { d } \\addlyrics { \\markup{mu mu} } }"
+        score.lyrics_raw.should eq '\markup{mu mu}'
+      end
     end
 
     describe '#lyrics_readable' do
