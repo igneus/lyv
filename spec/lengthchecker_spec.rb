@@ -72,8 +72,23 @@ EOS
         @c.music_length(key_score).should eq 0
       end
 
-      it 'handles correctly note with markup' do
+      it 'handles correctly note with markup variable' do
         markup_score = LilyPondScore.new "\\score { \\relative c' { d^\\markup\\rubrVelikAleluja } }"
+        @c.music_length(markup_score).should eq 1
+      end
+
+      it 'handles correctly note with inline markup' do
+        markup_score = LilyPondScore.new "\\score { \\relative c' { d^\\markup{hello} } }"
+        @c.music_length(markup_score).should eq 1
+      end
+
+      it 'handles correctly note with inline markup containing spaces' do
+        markup_score = LilyPondScore.new "\\score { \\relative c' { d^\\markup{hello world} } }"
+        @c.music_length(markup_score).should eq 1
+      end
+
+      it 'handles correctly note with inline markup with nested commands' do
+        markup_score = LilyPondScore.new "\\score { \\relative c' { d^\\markup\\bold\\italic{hello world} } }"
         @c.music_length(markup_score).should eq 1
       end
 
@@ -85,6 +100,11 @@ EOS
       it 'handles ? and ! correctly' do
         score = LilyPondScore.new "\\score { \\relative c' { bes? bes! } }"
         @c.music_length(score).should eq 2
+      end
+
+      it 'ignores repeats' do
+        score = LilyPondScore.new "\\score { \\relative c' { \\repeat unfold 2 { a } } }"
+        @c.music_length(score).should eq 1
       end
     end
 
@@ -105,6 +125,11 @@ EOS
       it 'skip counts as one syllable' do
         skip_score = LilyPondScore.new "\\score { \\relative c' { d } \\addlyrics { \\skip 1 } }"
         @c.lyrics_length(skip_score).should eq 1
+      end
+
+      it 'counts markup as one syllable' do
+        score = LilyPondScore.new "\\score { \\relative c' { d } \\addlyrics { \\markup{one two three} } }"
+        @c.lyrics_length(score).should eq 1
       end
     end
   end

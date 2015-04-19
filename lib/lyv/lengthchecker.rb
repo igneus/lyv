@@ -67,6 +67,7 @@ module Lyv
     def lyrics_length(score)
       delete_comments(score.lyrics_raw) \
         .gsub(/\\skip \d+/, 'xskipx') \
+        .gsub(/\\markup\{[^}]*\}/, 'xmarkupx') \
         .strip \
         .split(/\s+/).select {|x| x != '--' }.size
     end
