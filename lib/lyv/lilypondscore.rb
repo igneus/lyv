@@ -50,7 +50,7 @@ module Lyv
       # remove possible characters at the end which do not belong to the score -
       # because the "parser" of class LilyPondMusic isn't any clever
       i = @text.index '{'
-      end_i = LilyPondScore.index_matching_brace(@text, i)
+      end_i = self.class.index_matching_brace(@text, i)
       @text = @text[0..end_i]
     end
 
@@ -82,7 +82,7 @@ module Lyv
         return
       end
       i1 = @text.index '{', i1
-      i2 = LilyPondScore.index_matching_brace @text, i1
+      i2 = self.class.index_matching_brace @text, i1
       htext = @text[i1+1..i2-1]
       hlines = htext.split "\n"
       hlines.each do |l|
@@ -106,14 +106,14 @@ module Lyv
         return
       end
       i2 = @text.index('{', i1)
-      i3 = LilyPondScore.index_matching_brace @text, i2
+      i3 = self.class.index_matching_brace @text, i2
       @music = @text[i1..i3]
     end
 
     public
 
     # finds index of a brace matching to a brace at index i1
-    def LilyPondScore.index_matching_brace(str, i1)
+    def self.index_matching_brace(str, i1)
       braces_stack = [i1]
       i = i1+1
       loop do
