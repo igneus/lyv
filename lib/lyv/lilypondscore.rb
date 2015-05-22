@@ -112,7 +112,7 @@ module Lyv
 
     public
 
-    # finds index of a brace matching to a brace at index i1
+    # finds index of a brace matching a brace at index i1
     def self.index_matching_brace(str, i1)
       braces_stack = [i1]
       i = i1+1
