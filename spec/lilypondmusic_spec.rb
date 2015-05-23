@@ -69,6 +69,13 @@ module Lyv
         m = LilyPondMusic.new ''
         m.scores.should eq []
       end
+
+      xit 'loads document header' do
+        m = LilyPondMusic.new '\header { title = "My title" }'
+
+        expect(m.header).not_to be_empty
+        expect(m.header['title']).to eq 'My title'
+      end
     end
   end
 
