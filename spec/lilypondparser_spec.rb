@@ -8,9 +8,23 @@ module Lyv
       @parser = LilyPondParser.new
     end
 
-    describe '#parse_music' do
+    describe '#parse_document' do
       it 'returns LilyPondMusic' do
-        expect(@parser.parse_music('')).to be_a LilyPondMusic
+        expect(@parser.parse_document('')).to be_a LilyPond::Document
+      end
+
+      it 'loads scores' do
+        src = '\score {} \score {}'
+        doc = @parser.parse_document src
+        expect(doc.scores.size).to eq 2
+      end
+
+      it 'loads document header' do
+        src = '\header { title = "My title" }'
+        doc = @parser.parse_document src
+
+        expect(doc.header).not_to be_empty
+        expect(doc.header['title']).to eq 'My title'
       end
     end
 

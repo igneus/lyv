@@ -9,7 +9,7 @@ lilypondparser
 end
 
 %w{
-score
+score document
 }.each do |lib|
   require_relative File.join 'lyv', 'lilypond', lib
 end

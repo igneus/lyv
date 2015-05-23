@@ -9,15 +9,48 @@ module Lyv
   class LilyPondParser
 
     # parses a String as music (possibly a lot of scores
-    # and other content), returns LilyPondMusic
-    def parse_music(str)
-      return LilyPondMusic.new ''
+    # and other content), returns LilyPond::Document
+    def parse_document(str)
+      scores = []
+      header = {}
+
+      start_i = 0
+      toplevel_exp_start = /\\(score|header)\s*\{/
+
+      while start_i = str.index(toplevel_exp_start, start_i)
+        exp = toplevel_exp_start.match(str)[1]
+
+        case exp
+        when 'score'
+          ii = find_braced_exp(exp, str, start_i, true)
+          if ii.nil?
+            break
+          end
+          scores << parse_score(str[ii])
+        when 'header'
+          ii = find_braced_exp(exp, str, start_i)
+          if ii.nil?
+            break
+          end
+          header_text = braced_exp_content(braced_exp(exp, str[ii]) || '')
+          h = parse_key_value header_text
+          header.update h
+        else
+          raise RuntimeError.new "unexpected top-level expression '#{exp}'"
+        end
+        start_i = ii.end + 1
+      end
+
+      return LilyPond::Document.new(
+                                    :scores => scores,
+                                    :header => header,
+                                   )
     end
 
     # parses a String as one score (only handles the first
-    # score found), returns LilyPondScore
+    # score found), returns LilyPond::Score
     def parse_score(str)
-      text_ii = find_braced_exp 'score', str, true
+      text_ii = find_braced_exp 'score', str, 0, true
       if text_ii.nil?
         return nil
       end
@@ -46,15 +79,15 @@ module Lyv
     # finds first occurrence of lilypond construct
     # \exp_name { ... }
     # in the given string and returns a Range of string indices
-    def find_braced_exp(exp_name, str, leading_whitespace=false)
+    def find_braced_exp(exp_name, str, offset=0, leading_whitespace=false)
       start_regexp = /\\#{exp_name}\s*\{/
-      match = start_regexp.match str
+      match = start_regexp.match str, offset
       if match.nil?
         return nil
       end
 
       start_token = match.to_s
-      start_i = str.index(start_token)
+      start_i = str.index(start_token, offset)
       opening_brace_i = start_i + start_token.size - 1
       closing_brace_i = matching_brace_index str, opening_brace_i
 
@@ -70,7 +103,7 @@ module Lyv
     # finds first occurrence of a braced lilypond expression
     # and returns it as a string
     def braced_exp(exp_name, str, leading_whitespace=false)
-      ii = find_braced_exp(exp_name, str, leading_whitespace)
+      ii = find_braced_exp(exp_name, str, 0, leading_whitespace)
       if ii.nil?
         return nil
       end
