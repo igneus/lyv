@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require 'stringio'
+
 %w{
 lilypondtools lilypondmusic lilypondscore
 musicsplitter lengthchecker
