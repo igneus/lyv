@@ -84,18 +84,8 @@ module Lyv
       i1 = @text.index '{', i1
       i2 = self.class.index_matching_brace @text, i1
       htext = @text[i1+1..i2-1]
-      hlines = htext.split "\n"
-      hlines.each do |l|
-        l.sub!(/%.*$/, '') # strip comments
-        l.strip!
-        if ! l.index '=' then
-          next
-        end
-        ii = l.index '='
-        name = l[0..ii-1].strip
-        value = l[ii+1..-1].strip
-        value.gsub!(/['"]/, '') # strip quotes
-        @header[name] = value
+      htext.scan(/(\w+)\s*=\s*"(.+?)"/m) do |key, value|
+        @header[key] = value
       end
     end
 

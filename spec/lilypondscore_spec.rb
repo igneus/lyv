@@ -20,7 +20,10 @@ module Lyv
   \header {
     quid = "2. ant."
     modus = "V"
-    differentia = "a" 
+    differentia = "a"
+    multiline_property = "first line
+    second line
+third line"
     psalmus = "Žalm 142" % comment comment
     id = "ne-1ne-a2"
     piece = \markup {\sestavTitulek}
@@ -56,6 +59,11 @@ module Lyv
     describe '#header' do
       it 'does not contain comments' do
         score_with_comments.header['psalmus'].should eq 'Žalm 142'
+      end
+
+      it 'handles multi-line value, preserves whitespace' do
+        score_with_comments.header['multiline_property']
+          .should eq "first line\n    second line\nthird line"
       end
     end
 
