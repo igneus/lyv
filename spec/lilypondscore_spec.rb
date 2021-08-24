@@ -21,6 +21,7 @@ module Lyv
     quid = "2. ant."
     modus = "V"
     differentia = "a"
+    empty_property = ""
     multiline_property = "first line
     second line
 third line"
@@ -64,6 +65,10 @@ third line"
       it 'handles multi-line value, preserves whitespace' do
         score_with_comments.header['multiline_property']
           .should eq "first line\n    second line\nthird line"
+      end
+
+      it 'handles empty property' do
+        score_with_comments.header['empty_property'].should eq ''
       end
     end
 
