@@ -113,34 +113,34 @@ module Lyv
           @score_with_comments.lyrics_pretty.should_not include '%'
           @score_with_comments.lyrics_pretty.should eq 'Ejhle, Hospodin přijde'
         end
+      end
 
-        describe 'parses header' do
-          let(:score_src) do
+      describe 'parses header' do
+        let(:score_src) do
 '\score {
   \relative c\'\' { c4 c }
   \addlyrics { A -- men. }
   ' + header_src + '
 }'
-          end
-          let(:score) { subject.parse_score(score_src) }
-          let(:header) { score.header }
+        end
+        let(:score) { subject.parse_score(score_src) }
+        let(:header) { score.header }
 
-          include_examples 'header parsing'
+        include_examples 'header parsing'
+      end
+
+      describe 'parses music' do
+        it 'starts with the opening token of the music' do
+          @score_with_comments.music.should start_with "\\relative c''"
         end
 
-        describe 'parses music' do
-          it 'starts with the opening token of the music' do
-            @score_with_comments.music.should start_with "\\relative c''"
-          end
+        it 'ends with the closing brace' do
+          @score_with_comments.music.should end_with '}'
+        end
 
-          it 'ends with the closing brace' do
-            @score_with_comments.music.should end_with '}'
-          end
-
-          it 'contains music' do
-            @score_with_comments.music.should include '\choralniRezim'
-            @score_with_comments.music.should include 'c a c c a g f \barMin'
-          end
+        it 'contains music' do
+          @score_with_comments.music.should include '\choralniRezim'
+          @score_with_comments.music.should include 'c a c c a g f \barMin'
         end
       end
     end
