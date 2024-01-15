@@ -8,6 +8,28 @@ module Lyv
       @parser = LilyPondParser.new
     end
 
+    shared_examples 'header parsing' do
+      describe 'simple header' do
+        let(:header_src) { '\header { title = "My title" }' }
+        it { expect(header['title']).to eq 'My title' }
+      end
+
+      describe 'header with newlines' do
+        let(:header_src) { "\\header {\n  title = \"My title\" \n}" }
+        it { expect(header['title']).to eq 'My title' }
+      end
+
+      describe 'comments' do
+        let(:header_src) { "\\header { title = \"My title\" % comment \n}" }
+        it { expect(header['title']).to eq 'My title' }
+      end
+
+      describe 'escaped quotes in value' do
+        let(:header_src) { '\header { key = "hi\"ho" }' }
+        it { expect(header['key']).to eq 'hi"ho' }
+      end
+    end
+
     describe '#parse_document' do
       it 'returns LilyPondMusic' do
         expect(@parser.parse_document('')).to be_a LilyPond::Document
@@ -19,19 +41,11 @@ module Lyv
         expect(doc.scores.size).to eq 2
       end
 
-      it 'loads document header' do
-        src = '\header { title = "My title" }'
-        doc = @parser.parse_document src
+      describe 'loads document header' do
+        let(:document) { @parser.parse_document(header_src) }
+        let(:header) { document.header }
 
-        expect(doc.header).not_to be_empty
-        expect(doc.header['title']).to eq 'My title'
-      end
-
-      it 'loads document header with newlines' do
-        src = "\\header {\n  title = \"Hi ho ho\" \n}"
-        doc = @parser.parse_document src
-
-        expect(doc.header['title']).to eq 'Hi ho ho'
+        include_examples 'header parsing'
       end
     end
 
@@ -92,15 +106,17 @@ module Lyv
         end
 
         describe 'parses header' do
-          it 'does not contain comments' do
-            @score_with_comments.header['psalmus'].should eq 'Žalm 142'
+          let(:score_src) do
+'\score {
+  \relative c\'\' { c4 c }
+  \addlyrics { A -- men. }
+  ' + header_src + '
+}'
           end
+          let(:score) { @parser.parse_score(score_src) }
+          let(:header) { score.header }
 
-          it 'handles escaped quotes' do
-            s = '\score { \header { key = "hi\"ho" }}'
-            score = @parser.parse_score s
-            expect(score.header['key']).to eq 'hi"ho'
-          end
+          include_examples 'header parsing'
         end
 
         describe 'parses music' do
