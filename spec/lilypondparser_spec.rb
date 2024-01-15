@@ -10,6 +10,12 @@ module Lyv
         it { expect(header['title']).to eq 'My title' }
       end
 
+      describe 'multiple keys' do
+        let(:header_src) { '\header { key = "a" key2 = "b" }' }
+        it { expect(header['key']).to eq 'a' }
+        it { expect(header['key2']).to eq 'b' }
+      end
+
       describe 'header with newlines' do
         let(:header_src) { "\\header {\n  title = \"My title\" \n}" }
         it { expect(header['title']).to eq 'My title' }
@@ -23,6 +29,13 @@ module Lyv
       describe 'escaped quotes in value' do
         let(:header_src) { '\header { key = "hi\"ho" }' }
         it { expect(header['key']).to eq 'hi"ho' }
+      end
+
+      # this behavior is not ideal, but for now there's no need
+      # to be able to parse these
+      describe 'header fields with markup values are not parsed' do
+        let(:header_src) { '\header { key = \markup{some \italic{formatted} text} }' }
+        it { expect(header).not_to have_key 'key' }
       end
     end
 
