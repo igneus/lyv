@@ -4,10 +4,6 @@ require_relative 'spec_helper'
 
 module Lyv
   describe LilyPondParser do
-    before :all do
-      @parser = LilyPondParser.new
-    end
-
     shared_examples 'header parsing' do
       describe 'simple header' do
         let(:header_src) { '\header { title = "My title" }' }
@@ -32,17 +28,17 @@ module Lyv
 
     describe '#parse_document' do
       it 'returns LilyPondMusic' do
-        expect(@parser.parse_document('')).to be_a LilyPond::Document
+        expect(subject.parse_document('')).to be_a LilyPond::Document
       end
 
       it 'loads scores' do
         src = '\score {} \score {}'
-        doc = @parser.parse_document src
+        doc = subject.parse_document src
         expect(doc.scores.size).to eq 2
       end
 
       describe 'loads document header' do
-        let(:document) { @parser.parse_document(header_src) }
+        let(:document) { subject.parse_document(header_src) }
         let(:header) { document.header }
 
         include_examples 'header parsing'
@@ -69,11 +65,11 @@ module Lyv
     piece = \markup {\sestavTitulek}
   }
 }'
-        @score_with_comments = @parser.parse_score @score_with_comments_source
+        @score_with_comments = subject.parse_score @score_with_comments_source
       end
 
       it 'returns Score' do
-        expect(@parser.parse_score('\score {}')).to be_a LilyPond::Score
+        expect(subject.parse_score('\score {}')).to be_a LilyPond::Score
       end
 
       describe "parses text" do
@@ -85,7 +81,7 @@ module Lyv
           # eventual whitespace at the beginning is left in order not to break
           # relative indentation
           src = '   \score {}   '
-          expect(@parser.parse_score(src).text).to eq '   \score {}'
+          expect(subject.parse_score(src).text).to eq '   \score {}'
         end
       end
 
@@ -96,7 +92,7 @@ module Lyv
         end
 
         it 'handles nested braced expressions correctly' do
-          score = @parser.parse_score "\\score { \\relative c' { d } \\addlyrics { \\markup{mu mu} } }"
+          score = subject.parse_score "\\score { \\relative c' { d } \\addlyrics { \\markup{mu mu} } }"
           score.lyrics_raw.should eq '\markup{mu mu}'
         end
 
@@ -113,7 +109,7 @@ module Lyv
   ' + header_src + '
 }'
           end
-          let(:score) { @parser.parse_score(score_src) }
+          let(:score) { subject.parse_score(score_src) }
           let(:header) { score.header }
 
           include_examples 'header parsing'
