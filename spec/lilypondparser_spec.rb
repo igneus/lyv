@@ -26,6 +26,13 @@ module Lyv
         expect(doc.header).not_to be_empty
         expect(doc.header['title']).to eq 'My title'
       end
+
+      it 'loads document header with newlines' do
+        src = "\\header {\n  title = \"Hi ho ho\" \n}"
+        doc = @parser.parse_document src
+
+        expect(doc.header['title']).to eq 'Hi ho ho'
+      end
     end
 
     describe '#parse_score' do
