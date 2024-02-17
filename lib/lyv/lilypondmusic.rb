@@ -6,7 +6,7 @@
 
 module Lyv
   # Parses a lilypond file;
-  # provides access to it's scores
+  # provides access to its scores
   class LilyPondMusic
 
     def initialize(src)
