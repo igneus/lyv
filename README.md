@@ -1,5 +1,7 @@
 # lyv
 
+[![Build Status](https://github.com/igneus/lyv/actions/workflows/ci.yml/badge.svg)](https://github.com/igneus/lyv/actions/workflows/ci.yml)
+
 *lyv* is a small set of tools to handle [LilyPond](http://lilypond.org) data
 from Ruby.
 It is in no way general. Most of it was first written for my
