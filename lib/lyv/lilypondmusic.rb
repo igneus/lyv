@@ -18,7 +18,9 @@ module Lyv
       if src.is_a? IO then
         load_from src
       elsif src.is_a? String and File.exist? src then
-        load_from File.open(src, "r"), src
+        File.open(src, "r") do |fr|
+          load_from fr, src
+        end
       elsif src.is_a? String then
         load_from StringIO.new src
       else
