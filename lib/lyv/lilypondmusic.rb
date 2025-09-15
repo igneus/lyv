@@ -17,8 +17,6 @@ module Lyv
 
       if src.is_a? IO then
         load_from src
-      elsif src.is_a? String and src.include? '\score' then
-        load_from StringIO.new src
       elsif src.is_a? String and File.exist? src then
         load_from File.open(src, "r"), src
       elsif src.is_a? String then
