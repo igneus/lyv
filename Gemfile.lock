@@ -1,17 +1,19 @@
 GIT
-  remote: git://github.com/igneus/pslm.git
-  revision: dd021afb1ca399b6a460410f0f7719d6b4203496
+  remote: https://github.com/igneus/pslm.git
+  revision: 1e91c4112ec7e27d7ff51a435a43c6aab492163d
   specs:
     pslm (0.0.0)
       colorize
-      deep_merge
+      deep_merge (>= 1.1)
+      hashie (> 3.4)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    colorize (0.7.3)
-    deep_merge (1.0.1)
+    colorize (0.8.1)
+    deep_merge (1.2.2)
     diff-lcs (1.2.5)
+    hashie (5.0.0)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -31,3 +33,6 @@ DEPENDENCIES
   rspec
   sqlite3
   thor
+
+BUNDLED WITH
+   2.1.4
