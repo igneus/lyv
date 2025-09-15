@@ -26,11 +26,11 @@ module Lyv
       attr_reader :scores, :preamble, :header
 
       def [](i)
-        if i.is_a? Fixnum then
+        if i.is_a? Integer
           return @scores[i]
-        elsif i.is_a? String then
-          return @id_index[i]
         end
+
+        @id_index[i]
       end
 
       def include_id?(i)
