@@ -4,6 +4,7 @@ jobs:
   specs:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         ruby-version:
           - 2.0.0
