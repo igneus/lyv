@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
 require_relative 'spec_helper'
+require_relative 'shared_document'
 
 module Lyv
 
   describe LilyPondMusic do
 
-    describe ".new" do
+    before :each do
+      @test_fname = File.expand_path 'advent_responsoria.ly', EXAMPLES_DIR
+    end
 
-      before :each do
-        @test_fname = File.expand_path 'advent_responsoria.ly', EXAMPLES_DIR
-        @test_fname2 = File.expand_path 'kompletar.ly', EXAMPLES_DIR
-      end
+    describe ".new" do
 
       it 'loads from a string' do
         m = nil
@@ -50,7 +50,7 @@ module Lyv
         msrc = '\score { \relative c\' { a a } \addlyrics { la -- la } }'
         m1 = LilyPondMusic.new msrc
         m2 = LilyPondMusic.new msrc
-        
+
         m1.scores.first.number.should eq 1
         m2.scores.first.number.should eq 1
       end
@@ -69,6 +69,18 @@ module Lyv
         m = LilyPondMusic.new ''
         m.scores.should eq []
       end
+
+      it 'raises an exception on invalid input type' do
+        expect do
+          LilyPondMusic.new nil
+        end.to raise_exception(ArgumentError, /Unable to load/)
+      end
+    end
+
+    describe 'instance methods' do
+      subject { LilyPondMusic.new @test_fname }
+
+      include_examples 'behavior shared by LilyPond::Document and LilyPondMusic'
     end
   end
 
