@@ -4,6 +4,10 @@ gem 'thor'
 gem 'pslm', github: 'igneus/pslm'
 gem 'sqlite3'
 
-group :development do
+group :test do
   gem 'rspec'
+end
+
+group :development do
+  gem 'simplecov'
 end
